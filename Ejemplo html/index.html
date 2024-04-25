@@ -118,5 +118,52 @@
     <!-- Permite agrupar contenido dentro de una línea sin usar todo el ancho display:inline-->
     <p>Hola. <span style="background-color: blue;">Esto está dentro de un span.</span> Sigue el texto.</p>
 
+    <form action="http://localhost:8000/ruta_backend" method="post">
+        <div>
+            <label for="input nombre">Nombre:</label>
+            <input type="text" name="nombre" id="input nombre">
+        </div>
+        <div>
+            <label for="input correo">Email:</label>
+            <input type="email" name="correo" id="input correo">
+        </div>
+        <div>
+            <label for="input password">Contraseña:</label>
+            <input type="password" name="password" id="input password">
+        </div>
+        <div>
+            <label for="input nacimiento">Fecha de nacimiento:</label>
+            <input type="date" name="nacimiento" id="input nacimiento">
+        </div>
+        <div>
+            Colores favoritos:
+            <label for="check rosa">Rosa</label>
+            <input type="checkbox" name="rosa" id="check rosa">
+            <label for="check azul">Azul</label>
+            <input type="checkbox" name="azul" id="check azul">
+            <label for="check verde">Verde</label>
+            <input type="checkbox" name="verde" id="check verde">
+        </div>
+        <div>
+            ¿Tienes beca?
+            <label for="radio sí">Sí</label>
+            <input type="radio" name="radio beca" id="radio sí">
+            <label for="radio no">No</label>
+            <input type="radio" name="radio beca" id="radio no" checked>
+        </div>
+        <div>
+            <label for="select país">¿En qué país naciste?</label>
+            <select name="país" id="select país">
+                <option value="méxico">México</option>
+                <option value="canadá">Canadá</option>
+                <option value="eua">Estados Unidos de América</option>
+                <option value="españa">España</option>
+            </select>
+        </div>
+        <div>
+            <input type="submit" value="Enviar datos">
+        </div>
+    </form>
+
 </body>
 </html>
