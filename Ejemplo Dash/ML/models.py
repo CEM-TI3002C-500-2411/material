@@ -36,5 +36,5 @@ print(f"Classes: {mnb.classes_}")
 print(f"Probabilities: {mnb_prediction_probability}")
 mnb_prediction = mnb.predict(X_test.head(1))[0]
 print(f"Class prediction: {mnb_prediction}")
-joblib.dump(mnb, "modelo_multimodal.joblib")
-print("Modelo Multimodal guardado...")
+joblib.dump(mnb, "modelo_multinomial.joblib")
+print("Modelo Multinomial guardado...")
