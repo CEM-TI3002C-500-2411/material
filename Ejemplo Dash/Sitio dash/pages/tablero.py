@@ -3,10 +3,31 @@ import pandas as pd
 from dash import html, dash_table, dcc
 import dash_ag_grid as dag
 import plotly.express as px
+import requests
 
-df = pd.read_csv("Video_Games_Sales_as_at_22_Dec_2016.csv")
+backend_url = "http://localhost:8000"
 
-fig1 = px.scatter(df, x="NA_Sales", y="EU_Sales", size="Global_Sales", color="Developer")
+def get_table():
+    try:
+        url = f"{backend_url}/sample"
+        response = requests.get(url)
+        json_response = response.json()
+        return pd.DataFrame(json_response)
+    except Exception as e:
+        return pd.DataFrame()
+
+def get_sales_chart():
+    try:
+        url = f"{backend_url}/sales_chart_data"
+        response = requests.get(url)
+        json_response = response.json()
+        df = pd.DataFrame(json_response)
+        return px.scatter(df, x="NA_Sales", y="EU_Sales", size="Global_Sales", color="Developer")
+    except Exception as e:
+        return None
+
+df = get_table()
+fig1 = get_sales_chart()
 
 dash.register_page(__name__,
                    path="/tablero",
