@@ -1,3 +1,12 @@
+@font-face {
+    font-family: VGFont;
+    src: url(../fonts/PressStart2P-Regular.ttf);
+}
+
+.main-title {
+    font-family: VGFont;
+}
+
 .hallazgo-1 {
     background-image: url(../images/jugando.jpg);
     background-size: cover;

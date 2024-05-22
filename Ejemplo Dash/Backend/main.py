@@ -31,6 +31,14 @@ async def sample():
 async def sales_chart_data():
     return df[["NA_Sales", "EU_Sales", "Global_Sales", "Developer"]].to_dict(orient="records")
 
+@app.get("/sales_by_platform")
+async def sales_by_platform():
+    return df.groupby("Platform")["Global_Sales"].sum().reset_index().to_dict(orient="records")
+
+@app.get("/critic_score_mean_by_year")
+async def critic_score_mean_by_year():
+    return df.groupby(["Year_of_Release", "Platform"])["Critic_Score"].mean().reset_index().to_dict(orient="records")
+
 @app.get("/platforms")
 async def platforms():
     return {"platforms": df["Platform"].unique().tolist()}

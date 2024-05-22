@@ -1,6 +1,8 @@
 import dash
 from dash import html, dcc, callback, Input, Output, State
+import dash_ag_grid as dag
 import plotly.express as px
+import pandas as pd
 import requests
 
 backend_url = "http://localhost:8000"
@@ -53,7 +55,7 @@ dash.register_page(__name__,
 
 layout = html.Div(children=[
     html.Div(children=[
-        html.H3(children="Predicción de critic score"),
+        html.H3(children="Predicción de critic score", className="display-3"),
         html.Div(children=[
             html.Label(children="NA Sales", className="form-label"),
             dcc.Slider(
@@ -108,7 +110,48 @@ layout = html.Div(children=[
         html.Button(children="Obtener predicción", 
                     id="predicción critic score",
                     className="btn btn-lg btn-primary")
-        ], className="p-5 text-center bg-body-tertiary rounded-3")
+        ], className="p-5 text-center bg-body-tertiary rounded-3"),
+    html.Div(children=[
+        html.H3(children="Predicción de rating", className="display-3"),
+        html.Div(children=[
+            html.Label(children="Platform", className="form-label"),
+            dcc.Dropdown(
+                options = [{"label": platform, "value": platform} for platform in platforms],
+                value = platforms[0],
+                id = "Platform"
+            )
+            ], className="mb-3"),
+        html.Div(children=[
+            html.Label(children="Genre", className="form-label"),
+            dcc.Dropdown(
+                options = [{"label": genre, "value": genre} for genre in genres],
+                value = genres[0],
+                id = "Genre"
+            )
+            ], className="mb-3"),
+        html.Div(children=[
+            html.Label(children="Publisher", className="form-label"),
+            dcc.Dropdown(
+                options = [{"label": publisher, "value": publisher} for publisher in publishers],
+                value = publishers[0],
+                id = "Publisher"
+            )
+            ], className="mb-3"),
+        html.Div(children=[
+            html.Label(children="Developer", className="form-label"),
+            dcc.Dropdown(
+                options = [{"label": developer, "value": developer} for developer in developers],
+                value = developers[0],
+                id = "Developer"
+            )
+            ], className="mb-3"),
+        dcc.Loading(children=[
+            html.Div(children="", id="Rating")
+            ], type="circle"),
+        html.Button(children="Obtener predicción", 
+                    id="predicción rating",
+                    className="btn btn-lg btn-primary")
+        ], className="p-5 text-center bg-body-tertiary rounded-3"),
     ], className="container my-5")
 
 @callback(
@@ -132,7 +175,65 @@ def get_critic_score_prediction(n_clicks, NA_Sales, EU_Sales, JP_Sales, Other_Sa
             response = requests.post(url, json=data)
             response_json = response.json()
             prediction = response_json["prediction"]
-            return f"El critic score será de: {prediction}"
+            return html.Div(children=[
+                html.Div(children=[
+                    html.H3(children=[
+                        html.I(className="bi bi-clipboard-data-fill fs-4 text-primary"),
+                        f"La predicción del critic score es: {prediction}"
+                ]),
+                ])
+            ])
     except Exception as e:
         return "No se pudo hacer la predicción"
-        
+    
+@callback(
+    Output("Rating", "children"),
+    Input("predicción rating", "n_clicks"),
+    [State("Platform", "value"),
+     State("Genre", "value"),
+     State("Publisher", "value"),
+     State("Developer", "value")]
+)
+def get_rating_prediction(n_clicks, Platform, Genre, Publisher, Developer):
+    try:
+        if n_clicks:
+            url = f"{backend_url}/predict_rating"
+            data = {
+                "Platform": Platform,
+                "Genre": Genre,
+                "Publisher": Publisher,
+                "Developer": Developer
+            }
+            response = requests.post(url, json=data)
+            response_json = response.json()
+            prediction = response_json["prediction"]
+            url = f"{backend_url}/predict_rating_probabilities"
+            response = requests.post(url, json=data)
+            response_json = response.json()
+            prob_df = pd.DataFrame({
+                "Rating": response_json.keys(),
+                "Probability": response_json.values()
+            })
+            fig = px.pie(prob_df, values="Probability", names="Rating")
+            return html.Div(children=[
+                html.Div(children=[
+                    html.H3(children=[
+                        html.I(className="bi bi-clipboard-data-fill fs-4 text-primary"),
+                        f"La predicción del rating es: {prediction}",
+                        ]),
+                        dag.AgGrid(rowData=prob_df.to_dict("records"),
+                                   columnDefs=[
+                                       {"field": "Rating", "filter": True, "sortable": True},
+                                       {"field": "Probability", 
+                                        "filter": True, 
+                                        "sortable": True, 
+                                        "valueFormatter": {
+                                            "function": "d3.format(',.0%')(params.value)"
+                                            }}],
+                                   columnSize="sizeToFit"),
+                        dcc.Graph(id="rating pie", figure=fig)
+                        ])
+                ])
+    except Exception as e:
+        print(e)
+        return "No se pudo hacer la predicción"
