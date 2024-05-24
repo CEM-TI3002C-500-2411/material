@@ -64,6 +64,11 @@ layout = html.Div(children=[
     #         ], className="p-5 text-center bg-body-tertiary rounded-3")
     #     ], className="container my-5"),
     html.Div(children=[
+        html.Iframe(src="https://public.tableau.com/views/ejemplovisualparaelreto/Dashboardreto?:showVizHome=no&:embed=true",
+                    width="100%",
+                    height="800px"),
+    ], className="container"),
+    html.Div(children=[
         html.Div(children=[
             html.H1(children="Ventas anuales", className="text-body-emphasis"),
             dag.AgGrid(rowData=df.to_dict("records"),
