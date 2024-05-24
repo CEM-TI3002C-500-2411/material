@@ -26,5 +26,5 @@ layout = html.Div(children=[
             Repudiandae sequi cumque alias vero sint itaque numquam? Harum ratione sequi laboriosam obcaecati ex recusandae incidunt cumque, consectetur, suscipit, accusantium et esse. Quaerat fugiat autem porro cum laboriosam tempore doloremque!
                    """, className="lead")
             ], className="col-lg-6")
-        ], className="row flex-lg-row-reverse align-items-center g-5 py-5")
+        ], className="row flex-lg-row-reverse align-items-center g-5 py-5 appear")
     ], className="container col-xxl-8 px-4 py-5")

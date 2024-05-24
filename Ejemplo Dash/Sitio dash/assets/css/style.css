@@ -3,8 +3,33 @@
     src: url(../fonts/PressStart2P-Regular.ttf);
 }
 
+@keyframes titulo {
+    0% {
+        width: 0px;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .main-title {
     font-family: VGFont;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: titulo 2s linear forwards;
+}
+
+.appear {
+    animation: fadein 2s linear;
 }
 
 .hallazgo-1 {
